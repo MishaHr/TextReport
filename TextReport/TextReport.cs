@@ -9,6 +9,9 @@ namespace TextReport
 {
     class TextReport
     {
+        const char cellHorizontalLine = '─';
+        const string cellVerticalLine = "│";
+
         static string Path { get; set; }
 
         List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
@@ -41,7 +44,7 @@ namespace TextReport
 
 
             for (int i = 0 ; i < mainColumn.Count; i++) tableSize = tableSize + mainColumn[i].Item2;
-            separateLine = new string('-', tableSize + mainColumn.Count + 1);
+            separateLine = new string(cellHorizontalLine, tableSize + mainColumn.Count + 1);
 
             using (StreamWriter report = File.CreateText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
 
@@ -67,7 +70,7 @@ namespace TextReport
 
             while (allowPrint == true)
             {
-                row = "|";
+                row = cellVerticalLine;
                 allowPrint = false;
                 for (int i = 0; i < column.Count; i++)
                 {
@@ -90,7 +93,7 @@ namespace TextReport
                         columText = CorrectStringPart(column[i].Item1, column[i].Item2);
                         RemoveUsedPart(column,columText, i);
                     }
-                    row += AlignCentre(columText, column[i].Item2) + '|';
+                    row += AlignCentre(columText, column[i].Item2) + cellVerticalLine;
                 }
                 using (StreamWriter report = File.AppendText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(row);
             }
