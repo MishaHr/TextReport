@@ -11,7 +11,7 @@ namespace TextReport
     {
         static string Path { get; set; }
 
-        static List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
+        List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
 
         List<Tuple<string, int>> columnContent = new List<Tuple<string, int>>();
 
