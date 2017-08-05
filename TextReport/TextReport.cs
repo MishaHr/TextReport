@@ -69,12 +69,14 @@ namespace TextReport
                     {
                         columText = AlignCentre(mainColumn[i].Item1, mainColumn[i].Item2);
 
-                        //заповнюємо пропусками в кількості mainColumn[i].Item2
                         int width = mainColumn[i].Item2;
                         int id = mainColumn[i].Item3;
 
-                        mainColumn.Remove(new Tuple<string, int, int>(mainColumn[i].Item1, mainColumn[i].Item2, mainColumn[i].Item3));
-                        mainColumn.Insert(i, new Tuple<string, int, int>(EmptyString(width), width, id));
+                        if (!IsEmptyString(mainColumn[i].Item1))
+                        {
+                            mainColumn.Remove(new Tuple<string, int, int>(mainColumn[i].Item1, mainColumn[i].Item2, mainColumn[i].Item3));
+                            mainColumn.Insert(i, new Tuple<string, int, int>(EmptyString(width), width, id));
+                        }
 
                     }
                     else
@@ -114,13 +116,20 @@ namespace TextReport
 
         private string AlignCentre(string text, int width)
         {
-            if (string.IsNullOrEmpty(text)) return new string(' ', width);
-            else return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
         }
 
         private string EmptyString(int width)
         {
             return new string(' ', width);
+        }
+
+        private bool IsEmptyString(string text)
+        {
+            for (int i = 0; i < text.Length; i++)
+                if (text[i] != ' ') return false;
+
+            return true;
         }
     }
 }
