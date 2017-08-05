@@ -1,1 +1,6 @@
 C:\Users\Misha\Source\Repos\TextReport\TextReport\bin\Debug\TextReport.exe.config
+C:\Users\Misha\Source\Repos\TextReport\TextReport\bin\Debug\TextReport.exe
+C:\Users\Misha\Source\Repos\TextReport\TextReport\bin\Debug\TextReport.pdb
+C:\Users\Misha\Source\Repos\TextReport\TextReport\obj\Debug\TextReport.csprojResolveAssemblyReference.cache
+C:\Users\Misha\Source\Repos\TextReport\TextReport\obj\Debug\TextReport.exe
+C:\Users\Misha\Source\Repos\TextReport\TextReport\obj\Debug\TextReport.pdb

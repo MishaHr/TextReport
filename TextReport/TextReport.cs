@@ -44,20 +44,10 @@ namespace TextReport
 
         public void SetInfo(string text)
         {
-            for (int i = 0, j = 0, step = 0; i < text.Length; i++)
-            {
-                if (text[i] == ';')
-                {
-                    columnContent.Add(text.Substring(step, i - step));
-                    j++;
-                    step += i - step + 2;
-                }
-                else if (text[i] == '\n')
-                {
-                    columnContent.Add(text.Substring(step, i - step));
-                }
-            }
+            string[] columnStrings = text.Split(';', '\n');
 
+            for (int i = 0; i < columnStrings.Length; i++)
+                columnContent.Add(columnStrings[i]);
         }
 
         public void PrintTextReport()
