@@ -17,8 +17,8 @@ namespace TextReport
                             "24.06.2017;Склад №2;15.6 (1920x1080) Full HD, матовый, Intel Core i7-7500U, 2.7-3.5 ГГц;крутий комп";
 
             TextReport rep = new TextReport();
-            rep.SetInfo(text);
-            rep.SetInfo(text1);
+            rep.SetInfoAndPrint(text);
+            rep.SetInfoAndPrint(text1);
 
         }
 

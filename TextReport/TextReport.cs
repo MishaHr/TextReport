@@ -51,7 +51,7 @@ namespace TextReport
             PrintTextReport(mainColumn);
         }
 
-        public void SetInfo(string text)
+        public void SetInfoAndPrint(string text)
         {
             string[] columnStrings = text.Split(';');
 
@@ -83,7 +83,7 @@ namespace TextReport
                         if (!IsEmptyString(column[i].Item1))
                         {
                             column.Remove(new Tuple<string, int>(column[i].Item1, column[i].Item2));
-                            column.Insert(i, new Tuple<string, int>(EmptyString(width), width));
+                            column.Insert(i, new Tuple<string, int>(SetEmptyString(width), width));
                         }
 
                     }
@@ -128,7 +128,7 @@ namespace TextReport
             return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
         }
 
-        private string EmptyString(int width)
+        private string SetEmptyString(int width)
         {
             return new string(' ', width);
         }
