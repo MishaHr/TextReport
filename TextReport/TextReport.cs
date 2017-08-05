@@ -9,7 +9,7 @@ namespace TextReport
 {
     class TextReport
     {
-        List<Tuple<string, int, int>> mainColumn = new List<Tuple<string, int, int>>();
+        List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
 
         List<string> columnContent = new List<string>();
 
@@ -23,19 +23,19 @@ namespace TextReport
 
         public TextReport()
         {
-            mainColumn.Add(new Tuple<string, int, int>("ID", intWidth, 1));
-            mainColumn.Add(new Tuple<string, int, int>("Назва товару", stringWidth, 2));
-            mainColumn.Add(new Tuple<string, int, int>("Категорiя", stringWidth, 3));
-            mainColumn.Add(new Tuple<string, int, int>("Дата виготовлення", dataWidth, 4));
-            mainColumn.Add(new Tuple<string, int, int>("Термiн придатностi", stringWidth, 5));
-            mainColumn.Add(new Tuple<string, int, int>("Кількість одиниць", intWidth, 6));
-            mainColumn.Add(new Tuple<string, int, int>("Ціна за одиницю", intWidth, 7));
-            mainColumn.Add(new Tuple<string, int, int>("Постачальник", stringWidth, 8));
-            mainColumn.Add(new Tuple<string, int, int>("Телефон постачальника", stringWidth, 9));
-            mainColumn.Add(new Tuple<string, int, int>("Дата поставки", dataWidth, 10));
-            mainColumn.Add(new Tuple<string, int, int>("Номер складу", stringWidth, 11));
-            mainColumn.Add(new Tuple<string, int, int>("Короткий опис", stringWidth, 12));
-            mainColumn.Add(new Tuple<string, int, int>("Поле для приміток", stringWidth, 13));
+            mainColumn.Add(new Tuple<string, int>("ID", intWidth));
+            mainColumn.Add(new Tuple<string, int>("Назва товару", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Категорiя", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Дата виготовлення", dataWidth));
+            mainColumn.Add(new Tuple<string, int>("Термiн придатностi", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Кількість одиниць", intWidth));
+            mainColumn.Add(new Tuple<string, int>("Ціна за одиницю", intWidth));
+            mainColumn.Add(new Tuple<string, int>("Постачальник", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Телефон постачальника", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Дата поставки", dataWidth));
+            mainColumn.Add(new Tuple<string, int>("Номер складу", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Короткий опис", stringWidth));
+            mainColumn.Add(new Tuple<string, int>("Поле для приміток", stringWidth));
 
 
             for (int i = 0; i < mainColumn.Count; i++) sum = sum + mainColumn[i].Item2;
@@ -54,15 +54,15 @@ namespace TextReport
         {
             using (StreamWriter report = File.CreateText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
 
-            bool allowPrint = true;  //ознака кінця друку//
+            bool allowPrint = true;
 
             string row;
             string columText = "";
 
             while (allowPrint == true)
             {
-                row = "|";    //поточний рядок для друку робимо порожнім//
-                allowPrint = false;  //якщо ця змінна ніде не перетвориться в "true" значить виконання while закінчиться
+                row = "|";
+                allowPrint = false;
                 for (int i = 0; i < mainColumn.Count; i++)
                 {
                     if (mainColumn[i].Item1.Length <= mainColumn[i].Item2)
@@ -70,18 +70,17 @@ namespace TextReport
                         columText = AlignCentre(mainColumn[i].Item1, mainColumn[i].Item2);
 
                         int width = mainColumn[i].Item2;
-                        int id = mainColumn[i].Item3;
 
                         if (!IsEmptyString(mainColumn[i].Item1))
                         {
-                            mainColumn.Remove(new Tuple<string, int, int>(mainColumn[i].Item1, mainColumn[i].Item2, mainColumn[i].Item3));
-                            mainColumn.Insert(i, new Tuple<string, int, int>(EmptyString(width), width, id));
+                            mainColumn.Remove(new Tuple<string, int>(mainColumn[i].Item1, mainColumn[i].Item2));
+                            mainColumn.Insert(i, new Tuple<string, int>(EmptyString(width), width));
                         }
 
                     }
                     else
                     {
-                        allowPrint = true; // означає, що виконання while повинно продовжуватись 
+                        allowPrint = true;
                         columText = CorrectStringPart(mainColumn[i].Item1, mainColumn[i].Item2);
                         RemoveUsedPart(columText, i);
                     }
@@ -107,10 +106,9 @@ namespace TextReport
         {
             string subString = mainColumn[index].Item1.Remove(0, usedPart.Length + 1);
             int width = mainColumn[index].Item2;
-            int id = mainColumn[index].Item3;
 
-            mainColumn.Remove(new Tuple<string, int, int>(mainColumn[index].Item1, mainColumn[index].Item2, mainColumn[index].Item3));
-            mainColumn.Insert(index, new Tuple<string, int, int>(subString, width, id));
+            mainColumn.Remove(new Tuple<string, int>(mainColumn[index].Item1, mainColumn[index].Item2));
+            mainColumn.Insert(index, new Tuple<string, int>(subString, width));
 
         }
 

@@ -20,7 +20,6 @@ namespace TextReport
             rep.SetInfo(text);
             rep.PrintTextReport();
 
-            Console.ReadLine();
         }
 
     }
