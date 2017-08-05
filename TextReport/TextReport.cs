@@ -44,7 +44,7 @@ namespace TextReport
 
         public void SetInfo(string text)
         {
-            string[] columnStrings = text.Split(';', '\n');
+            string[] columnStrings = text.Split(';');
 
             for (int i = 0; i < columnStrings.Length; i++)
                 columnContent.Add(columnStrings[i]);
