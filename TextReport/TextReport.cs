@@ -9,20 +9,22 @@ namespace TextReport
 {
     class TextReport
     {
-        List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
+        static string Path { get; set; }
 
-        List<string> columnContent = new List<string>();
+        static List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
+
+        List<Tuple<string, int>> columnContent = new List<Tuple<string, int>>();
 
         const int dataWidth = 12;
         const int intWidth = 10;
         const int stringWidth = 16;
 
-        int sum;
+        int tableSize;
 
         string separateLine;
 
         public TextReport()
-        {
+        {           
             mainColumn.Add(new Tuple<string, int>("ID", intWidth));
             mainColumn.Add(new Tuple<string, int>("Назва товару", stringWidth));
             mainColumn.Add(new Tuple<string, int>("Категорiя", stringWidth));
@@ -38,8 +40,12 @@ namespace TextReport
             mainColumn.Add(new Tuple<string, int>("Поле для приміток", stringWidth));
 
 
-            for (int i = 0; i < mainColumn.Count; i++) sum = sum + mainColumn[i].Item2;
-            separateLine = new string('-', sum + mainColumn.Count + 1);
+            for (int i = 0 ; i < mainColumn.Count; i++) tableSize = tableSize + mainColumn[i].Item2;
+            separateLine = new string('-', tableSize + mainColumn.Count + 1);
+
+            using (StreamWriter report = File.CreateText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
+
+            PrintTextReport(mainColumn);
         }
 
         public void SetInfo(string text)
@@ -47,13 +53,13 @@ namespace TextReport
             string[] columnStrings = text.Split(';');
 
             for (int i = 0; i < columnStrings.Length; i++)
-                columnContent.Add(columnStrings[i]);
+                columnContent.Add(new Tuple<string, int>(columnStrings[i], mainColumn[i].Item2));
+
+            PrintTextReport(columnContent);
         }
 
-        public void PrintTextReport()
-        {
-            using (StreamWriter report = File.CreateText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
-
+        public void PrintTextReport(List<Tuple<string, int>> column)
+        {            
             bool allowPrint = true;
 
             string row;
@@ -63,33 +69,35 @@ namespace TextReport
             {
                 row = "|";
                 allowPrint = false;
-                for (int i = 0; i < mainColumn.Count; i++)
+                for (int i = 0; i < column.Count; i++)
                 {
-                    if (mainColumn[i].Item1.Length <= mainColumn[i].Item2)
+                    if (column[i].Item1.Length <= column[i].Item2)
                     {
-                        columText = AlignCentre(mainColumn[i].Item1, mainColumn[i].Item2);
+                        columText = AlignCentre(column[i].Item1, column[i].Item2);
 
-                        int width = mainColumn[i].Item2;
+                        int width = column[i].Item2;
 
-                        if (!IsEmptyString(mainColumn[i].Item1))
+                        if (!IsEmptyString(column[i].Item1))
                         {
-                            mainColumn.Remove(new Tuple<string, int>(mainColumn[i].Item1, mainColumn[i].Item2));
-                            mainColumn.Insert(i, new Tuple<string, int>(EmptyString(width), width));
+                            column.Remove(new Tuple<string, int>(column[i].Item1, column[i].Item2));
+                            column.Insert(i, new Tuple<string, int>(EmptyString(width), width));
                         }
 
                     }
                     else
                     {
                         allowPrint = true;
-                        columText = CorrectStringPart(mainColumn[i].Item1, mainColumn[i].Item2);
-                        RemoveUsedPart(columText, i);
+                        columText = CorrectStringPart(column[i].Item1, column[i].Item2);
+                        RemoveUsedPart(column,columText, i);
                     }
-
-                    row += AlignCentre(columText, mainColumn[i].Item2) + '|';
+                    row += AlignCentre(columText, column[i].Item2) + '|';
                 }
                 using (StreamWriter report = File.AppendText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(row);
             }
             using (StreamWriter report = File.AppendText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
+
+            columnContent.Clear();
+
         }
 
         private string CorrectStringPart(string text, int width)
@@ -102,13 +110,13 @@ namespace TextReport
             return content;
         }
 
-        private void RemoveUsedPart(string usedPart, int index)
+        private void RemoveUsedPart(List<Tuple<string, int>> column, string usedPart, int index)
         {
-            string subString = mainColumn[index].Item1.Remove(0, usedPart.Length + 1);
-            int width = mainColumn[index].Item2;
+            string subString = column[index].Item1.Remove(0, usedPart.Length + 1);
+            int width = column[index].Item2;
 
-            mainColumn.Remove(new Tuple<string, int>(mainColumn[index].Item1, mainColumn[index].Item2));
-            mainColumn.Insert(index, new Tuple<string, int>(subString, width));
+            column.Remove(new Tuple<string, int>(column[index].Item1, column[index].Item2));
+            column.Insert(index, new Tuple<string, int>(subString, width));
 
         }
 
