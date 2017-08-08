@@ -113,7 +113,7 @@ namespace TextReport
                     {
                         allowPrint = true;
                         columText = CorrectStringPart(column, i);
-                        RemoveUsedPart(column,columText, i);
+                        RemoveUsedWords(column,columText, i);
                     }
                     row += AlignCentre(columText, column[i].Item2) + cellVerticalLine;
                 }
@@ -150,7 +150,7 @@ namespace TextReport
             return word + "-";
         }
 
-        private void RemoveUsedPart(List<Tuple<string, int>> column, string usedPart, int index)
+        private void RemoveUsedWords(List<Tuple<string, int>> column, string usedPart, int index)
         {
             string subString = column[index].Item1.Remove(0, usedPart.Length + 1);
             int width = column[index].Item2;
