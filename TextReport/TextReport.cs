@@ -26,6 +26,7 @@ namespace TextReport
         const int intWidth = 10;
         const int stringWidth = 16;
 
+        // Конструктор по замовчуванні створює Звіт у папці Debug
         public TextReport()
         {
             SetMainColumn();
@@ -38,6 +39,7 @@ namespace TextReport
             PrintTextReport(mainColumn);
         }
 
+        // Конструктор отримує як параметр стрінг який буде адресою створення Звіту
         public TextReport(string path)
         {
             SetMainColumn();
@@ -50,6 +52,7 @@ namespace TextReport
             PrintTextReport(mainColumn);
         }
 
+        // Метод встановлює головні колонки та відповідні довжини
         private void SetMainColumn()
         {
             mainColumn.Add(new Tuple<string, int>("ID", intWidth));
@@ -67,12 +70,14 @@ namespace TextReport
             mainColumn.Add(new Tuple<string, int>("Поле для приміток", stringWidth));
         }
 
+        // Метод створює розділяючу лінію для звіту, за допомогою довжини колонок (+Знаки розділу колонок)
         private void SetSeparateLine()
         {
             for (int i = 0; i < mainColumn.Count; i++) tableSize = tableSize + mainColumn[i].Item2;
             separateLine = new string(cellHorizontalLine, tableSize + mainColumn.Count + 1);
         }
 
+        // Метод приймає стрінг, розподіляє його по відповідним колонкам з відповідними довжнами
         public void SetAndPrintInfo(string text)
         {
             string[] columnStrings = text.Split(';');
@@ -83,6 +88,7 @@ namespace TextReport
             PrintTextReport(columnContent);
         }
 
+        // Метод записує у файл Звіт
         private void PrintTextReport(List<Tuple<string, int>> column)
         {            
             bool allowPrint = true;
@@ -125,6 +131,8 @@ namespace TextReport
 
         }
 
+
+        // Метод визначає частину тексту, яка попаде в колонку
         private string CorrectStringPart(List<Tuple<string, int>> column ,int index)
         {
             string[] words = column[index].Item1.Split(' ');
@@ -141,6 +149,7 @@ namespace TextReport
             return content;
         }
 
+        // Метод будує перенос слова, якщо воно більше за розмір колонки
         private string WordTransmit(List<Tuple<string, int>> column, int index, string word)
         {
             string text = column[index].Item1.Substring(column[index].Item2 - 1);
@@ -150,6 +159,7 @@ namespace TextReport
             return word + "-";
         }
 
+        // Метод видаляє уже використані елементи з стрінгів , які записані в колонки
         private void RemoveUsedWords(List<Tuple<string, int>> column, string usedPart, int index)
         {
             string subString = column[index].Item1.Remove(0, usedPart.Length + 1);
@@ -160,16 +170,19 @@ namespace TextReport
 
         }
 
+        // Метод центрує текст який передається
         private string AlignCentre(string text, int width)
         {
             return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
         }
 
+        // Метод повертає пустий (заповнений пробілами) рядок
         private string SetEmptyString(int width)
         {
             return new string(' ', width);
         }
 
+        // Метод перевіряє чи пустий (заповнений пробілами) рядок
         private bool IsEmptyString(string text)
         {
             for (int i = 0; i < text.Length; i++)
