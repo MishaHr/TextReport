@@ -9,25 +9,49 @@ namespace TextReport
 {
     class TextReport
     {
-        const char cellHorizontalLine = '─';
-        const string cellVerticalLine = "│";
-
-        static string Path { get; set; }
-
         List<Tuple<string, int>> mainColumn = new List<Tuple<string, int>>();
 
         List<Tuple<string, int>> columnContent = new List<Tuple<string, int>>();
+
+        private const char cellHorizontalLine = '─';
+        private const string cellVerticalLine = "│";
+
+        public static string Path { get; set; }
+
+        private int tableSize;
+
+        private string separateLine;
 
         const int dataWidth = 12;
         const int intWidth = 10;
         const int stringWidth = 16;
 
-        int tableSize;
-
-        string separateLine;
-
         public TextReport()
-        {           
+        {
+            SetMainColumn();
+            SetSeparateLine();
+
+            Path = @"Звіт.txt";
+
+            using (StreamWriter report = File.CreateText(Path)) report.WriteLine(separateLine);
+
+            PrintTextReport(mainColumn);
+        }
+
+        public TextReport(string path)
+        {
+            SetMainColumn();
+            SetSeparateLine();
+
+            Path = @path;
+
+            using (StreamWriter report = File.CreateText(@path)) report.WriteLine(separateLine);
+
+            PrintTextReport(mainColumn);
+        }
+
+        private void SetMainColumn()
+        {
             mainColumn.Add(new Tuple<string, int>("ID", intWidth));
             mainColumn.Add(new Tuple<string, int>("Назва товару", stringWidth));
             mainColumn.Add(new Tuple<string, int>("Категорiя", stringWidth));
@@ -41,17 +65,15 @@ namespace TextReport
             mainColumn.Add(new Tuple<string, int>("Номер складу", stringWidth));
             mainColumn.Add(new Tuple<string, int>("Короткий опис", stringWidth));
             mainColumn.Add(new Tuple<string, int>("Поле для приміток", stringWidth));
-
-
-            for (int i = 0 ; i < mainColumn.Count; i++) tableSize = tableSize + mainColumn[i].Item2;
-            separateLine = new string(cellHorizontalLine, tableSize + mainColumn.Count + 1);
-
-            using (StreamWriter report = File.CreateText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
-
-            PrintTextReport(mainColumn);
         }
 
-        public void SetInfoAndPrint(string text)
+        private void SetSeparateLine()
+        {
+            for (int i = 0; i < mainColumn.Count; i++) tableSize = tableSize + mainColumn[i].Item2;
+            separateLine = new string(cellHorizontalLine, tableSize + mainColumn.Count + 1);
+        }
+
+        public void SetAndPrintInfo(string text)
         {
             string[] columnStrings = text.Split(';');
 
@@ -61,7 +83,7 @@ namespace TextReport
             PrintTextReport(columnContent);
         }
 
-        public void PrintTextReport(List<Tuple<string, int>> column)
+        private void PrintTextReport(List<Tuple<string, int>> column)
         {            
             bool allowPrint = true;
 
@@ -90,27 +112,42 @@ namespace TextReport
                     else
                     {
                         allowPrint = true;
-                        columText = CorrectStringPart(column[i].Item1, column[i].Item2);
+                        columText = CorrectStringPart(column, i);
                         RemoveUsedPart(column,columText, i);
                     }
                     row += AlignCentre(columText, column[i].Item2) + cellVerticalLine;
                 }
-                using (StreamWriter report = File.AppendText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(row);
+                using (StreamWriter report = File.AppendText(Path)) report.WriteLine(row);
             }
-            using (StreamWriter report = File.AppendText(@"C:\Users\Misha\Desktop\ЗвітТест.txt")) report.WriteLine(separateLine);
+            using (StreamWriter report = File.AppendText(Path)) report.WriteLine(separateLine);
 
             columnContent.Clear();
 
         }
 
-        private string CorrectStringPart(string text, int width)
+        private string CorrectStringPart(List<Tuple<string, int>> column ,int index)
         {
-            string[] words = text.Split(' ');
-            string content = words[0];
+            string[] words = column[index].Item1.Split(' ');
+            int width = column[index].Item2;
+            string content;
+            if (words[0].Length > width)
+                content = WordTransmit(column,index, words[0].Substring(0, width - 1));
+
+            else content = words[0]; 
+
             for (int i = 1; i < words.Length; i++)
                 if (content.Length + words[i].Length + 1 < width) content += " " + words[i];
                 else break;
             return content;
+        }
+
+        private string WordTransmit(List<Tuple<string, int>> column, int index, string word)
+        {
+            string text = column[index].Item1.Substring(column[index].Item2 - 1);
+            int width = column[index].Item2;
+            column.Remove(new Tuple<string, int>(column[index].Item1, column[index].Item2));
+            column.Insert(index, new Tuple<string, int>(word + " -" +  text, width));
+            return word + "-";
         }
 
         private void RemoveUsedPart(List<Tuple<string, int>> column, string usedPart, int index)
